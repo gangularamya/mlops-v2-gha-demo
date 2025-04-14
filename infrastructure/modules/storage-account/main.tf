@@ -9,8 +9,14 @@ locals {
   safe_postfix = replace(var.postfix, "-", "")
 }
 
+resource "random_string" "storage_account_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 resource "azurerm_storage_account" "st" {
-  name                     = "st${local.safe_prefix}${local.safe_postfix}${var.env}"
+  name                     = "st${local.safe_prefix}${local.safe_postfix}${var.env}${random_string.storage_account_suffix.result}"
   resource_group_name      = var.rg_name
   location                 = var.location
   account_tier             = "Standard"
